@@ -124,3 +124,7 @@ wcwidth==0.2.13
 webcolors==24.8.0
 webencodings==0.5.1
 websocket-client==1.8.0
+motor==3.6.0 
+pymongo==4.9.2
+# click==8.1.7 
+uvicorn==0.32.1

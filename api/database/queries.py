@@ -87,35 +87,41 @@ async def get_user(
 # client = AsyncIOMotorClient(MONGO_URI)
 # database = client["your_database_name"]
 
-# async def get_user_with_favourite_movies(user_id: str):
-#     """
-#     Fetch user details along with favorite movie details using $lookup.
+async def get_user_with_favourite_movies(user_id: int):
+    """
+    Fetch user details along with favorite movie details using $lookup.
 
-#     Args:
-#         user_id (str): The ID of the user to fetch.
+    Args:
+        user_id (str): The ID of the user to fetch.
 
-#     Returns:
-#         dict: User with favorite movie details.
-#     """
-#     try:
-#         # Convert user_id to ObjectId
-#         user_id = ObjectId(user_id)
-#     except Exception as e:
-#         print(f"Invalid user_id format: {e}")
-#         return None
+    Returns:
+        dict: User with favorite movie details.
+    """
 
-#     pipeline = [
-#         {"$match": {"_id": user_id}},  # Match the specific user
-#         {
-#             "$lookup": {  # Perform the $lookup operation
-#                 "from": "movies",  # The collection to join with
-#                 "localField": "favourite_movies",  # Field in 'users' containing the movie IDs
-#                 "foreignField": "_id",  # Field in 'movies' to match
-#                 "as": "movie_details",  # Output array field for the joined data
-#             }
-#         }
-#     ]
+    pipeline = [
+        {"$match": {"id": user_id}},  # Match the specific user
+        {
+            "$lookup": {  # Perform the $lookup operation
+                "from": "movies",  # The collection to join with
+                "localField": "favourite_movies",  # Field in 'users' containing the movie IDs
+                "foreignField": "_id",  # Field in 'movies' to match
+                "as": "movie_details",  # Output array field for the joined data
+            }
+        }
+    ]
 
-#     collection = database["users"]
-#     result = await collection.aggregate(pipeline).to_list(length=1)
-#     return result[0] if result else None
+    collection = database["users"]
+    result = await collection.aggregate(pipeline).to_list(length=1)
+    return result[0] if result else None
+
+
+
+
+# Running the async function
+async def main():
+    result = await get_user_with_favourite_movies(0)
+    print(result)
+import asyncio
+# Execute the async main function
+if __name__ == "__main__":
+    asyncio.run(main())
